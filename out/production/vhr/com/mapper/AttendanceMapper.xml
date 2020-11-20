@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.mapper.AttendanceMapper">
+    <select id="findAttendanceByu_id" parameterType="int" resultType="Attendance">
+        select * from ATTENDANCE where ATT_USERID = #{u_id} and (ATT_S_BAN > TRUNC(sysdate,'dd'))
+    </select>
+
+    <parameterMap id="add_s_ban" type="java.util.Map">
+        <parameter property="u_id" mode="IN" jdbcType="INTEGER"></parameter>
+        <parameter property="i" mode="IN" jdbcType="INTEGER"></parameter>
+    </parameterMap>
+    <insert id="addAttendanceS_ban" parameterMap="add_s_ban" statementType="CALLABLE">
+        {call ADD_S_BAN(?,?)}
+    </insert>
+
+    <parameterMap id="update_x_ban" type="Map">
+        <parameter property="u_id" mode="IN" jdbcType="INTEGER"></parameter>
+        <parameter property="i" mode="IN" jdbcType="INTEGER"></parameter>
+    </parameterMap>
+    <update id="updateAttendanceX_ban" parameterMap="update_x_ban" statementType="CALLABLE">
+        {call UPDATE_X_BAN(?,?)}
+    </update>
+</mapper>

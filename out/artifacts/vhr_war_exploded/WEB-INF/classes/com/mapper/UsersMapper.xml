@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.mapper.UsersMapper">
+    
+    <select id="findUsers" resultType="Users">
+      select u.*,dep.DEP_NAME,pos.POS_NAME from USERS u
+      left join department dep
+      on dep.DEP_ID = u.DEP_ID
+      left join POSITION pos
+      on pos.POS_ID = u.POS_ID
+    </select>
+
+    <resultMap id="find_users_by_id" type="Users">
+        <result column="u_id" property="u_id" jdbcType="INTEGER" javaType="Integer"/>
+        <result column="u_name" property="u_name" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="workId" property="workId" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="sex" property="sex" jdbcType="INTEGER" javaType="Integer"></result>
+        <result column="birthday" property="birthday" jdbcType="DATE" javaType="Date"></result>
+        <result column="phone" property="phone" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="address" property="address" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="dep_id" property="dep_id" jdbcType="INTEGER" javaType="Integer"></result>
+        <result column="pos_id" property="pos_id" jdbcType="INTEGER" javaType="Integer"></result>
+        <result column="s_ban" property="s_ban" jdbcType="DATE" javaType="Date"></result>
+        <result column="x_ban" property="x_ban" jdbcType="DATE" javaType="Date"></result>
+        <result column="u_remarks" property="u_remarks" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="identityCard" property="identityCard" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="password" property="password" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="u_state" property="u_state" jdbcType="INTEGER" javaType="Integer"></result>
+        <result column="dep_name" property="dep_name" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="pos_name" property="pos_name" jdbcType="VARCHAR" javaType="String"></result>
+    </resultMap>
+    <select id="findUsersById" statementType="CALLABLE" resultMap="find_users_by_id">
+        select u.*,dep.DEP_NAME,pos.POS_NAME from USERS u
+        left join department dep
+        on dep.DEP_ID = u.DEP_ID
+        left join POSITION pos
+        on pos.POS_ID = u.POS_ID
+        where U_ID = #{u_id} for update
+    </select>
+
+    <delete id="deleteUsersById" statementType="CALLABLE">
+        {
+          call DELETE_USERS(#{u_id, mode=IN, jdbcType=NUMERIC})
+        }
+    </delete>
+
+    <parameterMap id="update_users" type="Map">
+        <parameter property="sex" mode="IN" jdbcType="INTEGER"></parameter>
+        <parameter property="birthday" mode="IN" jdbcType="DATE"></parameter>
+        <parameter property="phone" mode="IN" jdbcType="VARCHAR"></parameter>
+        <parameter property="address" mode="IN" jdbcType="VARCHAR"></parameter>
+        <parameter property="dep_id" mode="IN" jdbcType="INTEGER"></parameter>
+        <parameter property="pos_id" mode="IN" jdbcType="INTEGER"></parameter>
+        <parameter property="identityCard" mode="IN" jdbcType="VARCHAR"></parameter>
+        <parameter property="u_id" mode="IN" jdbcType="INTEGER"></parameter>
+        <parameter property="password" mode="IN" jdbcType="VARCHAR"></parameter>
+        <parameter property="s_ban" mode="IN" jdbcType="DATE"></parameter>
+        <parameter property="x_ban" mode="IN" jdbcType="DATE"></parameter>
+    </parameterMap>
+    <update id="updateUsers" parameterMap="update_users" statementType="CALLABLE">
+        {call UPDATE_USERS(?,?,?,?,?,?,?,?,?,?,?)}
+    </update>
+
+    <parameterMap id="add_users" type="Map">
+        <parameter property="u_name" mode="IN" jdbcType="VARCHAR"></parameter>
+        <parameter property="workId" mode="IN" jdbcType="VARCHAR"></parameter>
+        <parameter property="sex" mode="IN" jdbcType="INTEGER"></parameter>
+        <parameter property="birthday" mode="IN" jdbcType="DATE"></parameter>
+        <parameter property="phone" mode="IN" jdbcType="VARCHAR"></parameter>
+        <parameter property="address" mode="IN" jdbcType="VARCHAR"></parameter>
+        <parameter property="dep_id" mode="IN" jdbcType="INTEGER"></parameter>
+        <parameter property="pos_id" mode="IN" jdbcType="INTEGER"></parameter>
+        <parameter property="s_ban" mode="IN" jdbcType="DATE"></parameter>
+        <parameter property="x_ban" mode="IN" jdbcType="DATE"></parameter>
+        <parameter property="u_remarks" mode="IN" jdbcType="VARCHAR"></parameter>
+        <parameter property="identityCard" mode="IN" jdbcType="VARCHAR"></parameter>
+        <parameter property="password" mode="IN" jdbcType="VARCHAR"></parameter>
+    </parameterMap>
+    <insert id="addUsers" parameterMap="add_users" statementType="CALLABLE">
+        {call ADD_USERS(?,?,?,?,?,?,?,?,?,?,?,?,?)}
+    </insert>
+
+</mapper>
